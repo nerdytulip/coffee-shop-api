@@ -6,6 +6,8 @@
   "scripts": {
     "start": "serverless offline",
     "test": "jest",
+    "test:unit": "jest --config jest.config.js --testPathPattern=tests/unit",
+    "test:integration": "jest --config jest.config.js --testPathPattern=tests/integration",
     "deploy": "serverless deploy",
     "deploy:prod": "serverless deploy --stage prod"
   },
