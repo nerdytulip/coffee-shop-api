@@ -55,6 +55,27 @@ The system is built using a serverless architecture:
 
 ---
 
+## API Testing with Postman
+
+1. **Create Order:**
+   ![image](https://github.com/user-attachments/assets/8161d9fe-6139-42e1-acd1-d361435f8455)
+   ![image](https://github.com/user-attachments/assets/f53bdd80-de04-4ff2-9536-de8402b01b07)
+
+2. **List Orders:**
+   ![image](https://github.com/user-attachments/assets/cc1023c5-d85f-410a-88bd-59f2b4108edd)
+   ![image](https://github.com/user-attachments/assets/dc3887c5-c9be-4cb1-89d4-4b6761470b09)
+
+3. **Get Order:**
+   ![image](https://github.com/user-attachments/assets/e5db3835-6fc0-4416-b9a4-a4dfcdd1cabe)
+
+4. **Update Order:**
+   ![image](https://github.com/user-attachments/assets/b0f5293a-302a-4a23-afac-308841fd4596)
+
+5. **Delete Order:**
+   ![image](https://github.com/user-attachments/assets/4b59a4ba-a6af-4d41-855c-8f5ecc21e077)
+
+---
+
 ## Installation
 
 1. **Clone the repository:**
