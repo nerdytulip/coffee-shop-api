@@ -21,7 +21,6 @@ export const handler = async (
 
     const timestamp = new Date().getTime();
 
-    // Define update expression and attributes
     const updateExpression = "SET #os = :orderStatus, updatedAt = :updatedAt";
     const expressionAttributes = {
       ":orderStatus": data.orderStatus,
@@ -31,10 +30,12 @@ export const handler = async (
       "#os": "orderStatus",
     };
 
-    const result = await dynamoDbClient.update(id, updateExpression, {
-      ...expressionAttributes,
-      ExpressionAttributeNames: expressionAttributeNames,
-    });
+    const result = await dynamoDbClient.update(
+      id,
+      updateExpression,
+      expressionAttributes,
+      expressionAttributeNames
+    );
 
     console.log("Update Result:", JSON.stringify(result, null, 2));
 

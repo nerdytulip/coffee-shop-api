@@ -29,13 +29,19 @@ export const dynamoDbClient = {
       .promise();
   },
 
-  update: (id: string, updateExpression: string, expressionAttributes: any) => {
+  update: (
+    id: string,
+    updateExpression: string,
+    expressionAttributes: any,
+    expressionAttributeNames: any
+  ) => {
     return dynamoDb
       .update({
         TableName: getOrdersTable(),
         Key: { id },
         UpdateExpression: updateExpression,
         ExpressionAttributeValues: expressionAttributes,
+        ExpressionAttributeNames: expressionAttributeNames,
         ReturnValues: "ALL_NEW",
       })
       .promise();
