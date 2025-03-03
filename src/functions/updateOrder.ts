@@ -18,7 +18,7 @@ export const handler = async (
 
     const result = await dynamoDbClient.update(
       id,
-      "set #status = :status, updatedAt = :updatedAt",
+      "set #orderStatus = :orderStatus, updatedAt = :updatedAt",
       {
         ":orderStatus": orderStatus,
         ":updatedAt": timestamp,
