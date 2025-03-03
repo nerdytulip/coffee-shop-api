@@ -1,0 +1,40 @@
+functions:
+  createOrder:
+    handler: src/functions/createOrder.handler
+    events:
+      - http:
+          path: /orders
+          method: post
+          cors: true
+
+  getOrder:
+    handler: src/functions/getOrder.handler
+    events:
+      - http:
+          path: /orders/{id}
+          method: get
+          cors: true
+
+  listOrders:
+    handler: src/functions/listOrders.handler
+    events:
+      - http:
+          path: /orders
+          method: get
+          cors: true
+
+  updateOrder:
+    handler: src/functions/updateOrder.handler
+    events:
+      - http:
+          path: /orders/{id}
+          method: put
+          cors: true
+
+  deleteOrder:
+    handler: src/functions/deleteOrder.handler
+    events:
+      - http:
+          path: /orders/{id}
+          method: delete
+          cors: true

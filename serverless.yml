@@ -6,76 +6,12 @@ plugins:
   - serverless-plugin-typescript
   - serverless-offline
 
-provider:
-  name: aws
-  runtime: nodejs18.x
-  stage: ${opt:stage, 'dev'}
-  region: us-east-1
+# Load modularized configurations
+custom:
+  config: ${file(./config/provider.yml)}
+  functions: ${file(./config/functions.yml)}
+  resources: ${file(./config/resources.yml)}
 
-  environment:
-    ORDERS_TABLE: ${self:service}-orders-${self:provider.stage}
-
-  iamRoleStatements:
-    - Effect: Allow
-      Action:
-        - dynamodb:PutItem
-        - dynamodb:GetItem
-        - dynamodb:UpdateItem
-        - dynamodb:DeleteItem
-        - dynamodb:Scan
-      Resource: !GetAtt OrdersTable.Arn
-
-functions:
-  createOrder:
-    handler: src/functions/createOrder.handler
-    events:
-      - http:
-          path: /orders
-          method: post
-          cors: true
-
-  getOrder:
-    handler: src/functions/getOrder.handler
-    events:
-      - http:
-          path: /orders/{id}
-          method: get
-          cors: true
-
-  listOrders:
-    handler: src/functions/listOrders.handler
-    events:
-      - http:
-          path: /orders
-          method: get
-          cors: true
-
-  updateOrder:
-    handler: src/functions/updateOrder.handler
-    events:
-      - http:
-          path: /orders/{id}
-          method: put
-          cors: true
-
-  deleteOrder:
-    handler: src/functions/deleteOrder.handler
-    events:
-      - http:
-          path: /orders/{id}
-          method: delete
-          cors: true
-
-resources:
-  Resources:
-    OrdersTable:
-      Type: AWS::DynamoDB::Table
-      Properties:
-        TableName: ${self:provider.environment.ORDERS_TABLE}
-        AttributeDefinitions:
-          - AttributeName: id
-            AttributeType: S
-        KeySchema:
-          - AttributeName: id
-            KeyType: HASH
-        BillingMode: PAY_PER_REQUEST
+provider: ${self:custom.config.provider}
+functions: ${self:custom.functions.functions}
+resources: ${self:custom.resources.resources}
