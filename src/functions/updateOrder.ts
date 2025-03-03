@@ -14,14 +14,13 @@ export const handler = async (
     }
 
     const timestamp = new Date().getTime();
-    const { status } = data;
+    const { orderStatus } = data;
 
     const result = await dynamoDbClient.update(
       id,
       "set #status = :status, updatedAt = :updatedAt",
       {
-        "#status": "status",
-        ":status": status,
+        ":orderStatus": orderStatus,
         ":updatedAt": timestamp,
       }
     );

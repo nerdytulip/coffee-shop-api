@@ -2,7 +2,7 @@ export interface Order {
   id: string;
   customerName: string;
   items: OrderItem[];
-  status: OrderStatus;
+  orderStatus: OrderStatus;
   totalAmount: number;
   createdAt: number;
   updatedAt: number;

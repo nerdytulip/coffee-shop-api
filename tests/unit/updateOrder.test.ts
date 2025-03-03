@@ -6,7 +6,7 @@ jest.mock("../../src/utils/dynamodb", () => ({
     update: jest.fn().mockResolvedValue({
       Attributes: {
         id: "123",
-        status: "COMPLETED",
+        orderStatus: "COMPLETED",
         updatedAt: 123456789,
       },
     }),
@@ -17,7 +17,7 @@ describe("updateOrder - Unit Tests", () => {
   test("should return 200 and updated order", async () => {
     const event = {
       pathParameters: { id: "123" },
-      body: JSON.stringify({ status: "COMPLETED" }),
+      body: JSON.stringify({ orderStatus: "COMPLETED" }),
     };
 
     const response = await updateOrder(event as any);
@@ -25,13 +25,13 @@ describe("updateOrder - Unit Tests", () => {
 
     const body = JSON.parse(response.body);
     expect(body.id).toBe("123");
-    expect(body.status).toBe("COMPLETED");
+    expect(body.orderStatus).toBe("COMPLETED");
   });
 
   test("should return 400 if id is missing", async () => {
     const event = {
       pathParameters: {},
-      body: JSON.stringify({ status: "COMPLETED" }),
+      body: JSON.stringify({ orderStatus: "COMPLETED" }),
     };
 
     const response = await updateOrder(event as any);
@@ -50,7 +50,7 @@ describe("updateOrder - Unit Tests", () => {
 
     const event = {
       pathParameters: { id: "123" },
-      body: JSON.stringify({ status: "COMPLETED" }),
+      body: JSON.stringify({ orderStatus: "COMPLETED" }),
     };
 
     const response = await updateOrder(event as any);

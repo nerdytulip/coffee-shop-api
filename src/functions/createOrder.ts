@@ -15,7 +15,7 @@ export const handler = async (
       id: uuidv4(),
       customerName: data.customerName,
       items: data.items,
-      status: "PENDING",
+      orderStatus: "PENDING",
       totalAmount: data.items.reduce(
         (sum: number, item: any) => sum + item.price * item.quantity,
         0
