@@ -20,6 +20,7 @@ export const handler = async (
       id,
       "set #status = :status, updatedAt = :updatedAt",
       {
+        "#status": "status",
         ":status": status,
         ":updatedAt": timestamp,
       }
