@@ -44,7 +44,15 @@ jobs:
 
       - name: Capture API Gateway URL (Prod Only)
         if: inputs.stage == 'prod'
-        run: echo "PROD_API_URL=$(npx serverless info --stage prod | grep -Eo 'https://[a-zA-Z0-9.-]+\.execute-api\.[a-zA-Z0-9-]+\.amazonaws.com/prod')" >> $GITHUB_ENV
+        run: |
+          PROD_URL=$(npx serverless info --stage prod | grep -Eo 'https://[a-zA-Z0-9.-]+\.execute-api\.[a-zA-Z0-9-]+\.amazonaws.com/prod' | head -n 1 | tr -d '[:space:]')
+
+          if [[ -z "$PROD_URL" ]]; then
+            echo " Failed to capture API URL" >&2
+            exit 1
+          fi
+
+          echo "PROD_API_URL=$PROD_URL" >> $GITHUB_ENV
 
       - name: Run Smoke Tests (Prod Only)
         if: inputs.stage == 'prod'
