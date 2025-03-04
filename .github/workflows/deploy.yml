@@ -57,7 +57,7 @@ jobs:
       - name: Deploy to prod
         run: npx serverless deploy --stage prod
 
-      - name: Capture API Gateway URL (Prod Only)
+      - name: Capture API Gateway URL
         run: |
           PROD_URL=$(npx serverless info --stage prod | grep -Eo 'https://[a-zA-Z0-9.-]+\.execute-api\.[a-zA-Z0-9-]+\.amazonaws.com/prod' | head -n 1 | tr -d '[:space:]')
 
@@ -68,7 +68,7 @@ jobs:
 
           echo "PROD_API_URL=$PROD_URL" >> $GITHUB_ENV
 
-      - name: Run Smoke Tests (Prod Only)
+      - name: Run Smoke Tests
         run: npm run test:smoke
         env:
           PROD_API_URL: ${{ env.PROD_API_URL }}
