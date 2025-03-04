@@ -1,0 +1,43 @@
+name: CI/CD Setup
+
+on:
+  workflow_call:
+    inputs:
+      stage:
+        required: true
+        type: string
+    secrets:
+      AWS_ACCESS_KEY_ID:
+        required: true
+      AWS_SECRET_ACCESS_KEY:
+        required: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "18"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run unit tests
+        if: inputs.stage == 'dev'
+        run: npm run test:unit
+
+      - name: Deploy to ${{ inputs.stage }}
+        run: npx serverless deploy --stage ${{ inputs.stage }}
+
+      - name: Run integration tests
+        if: inputs.stage == 'dev'
+        run: npm run test:integration

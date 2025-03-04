@@ -7,52 +7,15 @@ on:
 
 jobs:
   deploy-dev-and-test:
-    runs-on: ubuntu-latest
-
-    env:
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: "18"
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Run unit tests
-        run: npm run test:unit
-
-      - name: Deploy to dev
-        run: npx serverless deploy --stage dev
-
-      - name: Run integration tests
-        run: npm run test:integration
+    uses: ./.github/workflows/ci-setup.yml
+    with:
+      stage: dev
+    secrets: inherit
 
   deploy-prod:
-    runs-on: ubuntu-latest
-
-    needs: deploy-dev-and-test # Only run if the dev deployment and tests succeeded
-    if: ${{ github.ref == 'refs/heads/master' }}
-
-    env:
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: "18"
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Deploy to prod
-        run: npx serverless deploy --stage prod
+    uses: ./.github/workflows/ci-setup.yml
+    needs: deploy-dev-and-test
+    if: github.ref == 'refs/heads/master'
+    with:
+      stage: prod
+    secrets: inherit
