@@ -41,3 +41,13 @@ jobs:
       - name: Run integration tests
         if: inputs.stage == 'dev'
         run: npm run test:integration
+
+      - name: Capture API Gateway URL (Prod Only)
+        if: inputs.stage == 'prod'
+        run: echo "PROD_API_URL=$(npx serverless info --stage prod | grep 'https' | awk '{print $3}')" >> $GITHUB_ENV
+
+      - name: Run Smoke Tests (Prod Only)
+        if: inputs.stage == 'prod'
+        run: npm run test:smoke
+        env:
+          PROD_API_URL: ${{ env.PROD_API_URL }}
