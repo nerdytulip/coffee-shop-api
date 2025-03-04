@@ -7,15 +7,68 @@ on:
 
 jobs:
   deploy-dev-and-test:
-    uses: ./.github/workflows/ci-setup.yml
-    with:
-      stage: dev
-    secrets: inherit
+    runs-on: ubuntu-latest
+
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "18"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run unit tests
+        run: npm run test:unit
+
+      - name: Deploy to dev
+        run: npx serverless deploy --stage dev
+
+      - name: Run integration tests
+        run: npm run test:integration
 
   deploy-prod:
-    uses: ./.github/workflows/ci-setup.yml
-    needs: deploy-dev-and-test
-    if: github.ref == 'refs/heads/master'
-    with:
-      stage: prod
-    secrets: inherit
+    runs-on: ubuntu-latest
+
+    needs: deploy-dev-and-test # Only run if the dev deployment and tests succeeded
+    if: ${{ github.ref == 'refs/heads/master' }}
+
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "18"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Deploy to prod
+        run: npx serverless deploy --stage prod
+
+      - name: Capture API Gateway URL (Prod Only)
+        run: |
+          PROD_URL=$(npx serverless info --stage prod | grep -Eo 'https://[a-zA-Z0-9.-]+\.execute-api\.[a-zA-Z0-9-]+\.amazonaws.com/prod' | head -n 1 | tr -d '[:space:]')
+
+          if [[ -z "$PROD_URL" ]]; then
+            echo " Failed to capture API URL" >&2
+            exit 1
+          fi
+
+          echo "PROD_API_URL=$PROD_URL" >> $GITHUB_ENV
+
+      - name: Run Smoke Tests (Prod Only)
+        run: npm run test:smoke
+        env:
+          PROD_API_URL: ${{ env.PROD_API_URL }}
