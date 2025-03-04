@@ -8,6 +8,7 @@ plugins:
 
 # Load modularized configurations
 custom:
+  tableName: ${self:service}-orders-${opt:stage, 'dev'}
   config: ${file(./config/provider.yml)}
   functions: ${file(./config/functions.yml)}
   resources: ${file(./config/resources.yml)}

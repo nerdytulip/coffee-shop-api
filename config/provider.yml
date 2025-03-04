@@ -5,7 +5,7 @@ provider:
   region: us-east-1
 
   environment:
-    ORDERS_TABLE: ${self:service}-orders-${self:provider.stage}
+    ORDERS_TABLE: ${self:custom.tableName}
 
   iamRoleStatements:
     - Effect: Allow
